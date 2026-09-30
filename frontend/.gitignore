@@ -1,0 +1,19 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# vercel cli cache (optional deployments)
+.vercel/
+
+# local environment files (real secrets/URLs are never committed)
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# misc
+.DS_Store
+npm-debug.log*

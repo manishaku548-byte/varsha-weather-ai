@@ -1,0 +1,3 @@
+# Render / Railway process definition for the VARSHA Weather AI backend.
+# $PORT is injected by the platform; the app falls back to 8001 locally.
+web: uvicorn app.main:app --host 0.0.0.0 --port $PORT

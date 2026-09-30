@@ -1,0 +1,23 @@
+# VARSHA Weather AI — backend dependencies
+# Python 3.11+ (developed/tested on Python 3.14)
+
+# Web framework and validation
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.7.0
+
+# Data handling
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Storage (SQLite audit/override tables)
+sqlalchemy>=2.0.30
+
+# ML (Phase 4) — local rainfall-correction model: Pipeline/ColumnTransformer,
+# HistGradientBoostingRegressor, LinearRegression, joblib artifact persistence
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+# Testing
+pytest>=8.0.0
+httpx>=0.27.0

@@ -1,0 +1,331 @@
+{
+  "report_type": "local_correction_model",
+  "status": "completed",
+  "generated_at": "2026-09-29T07:00:07Z",
+  "data_mode": "synthetic",
+  "disclaimer": "Synthetic Development Dataset — Development/Testing Only — Not Operational Weather Data — Not an Official Weather Warning.",
+  "lead_hours": 24,
+  "model_version": "ai-local-24h-20260929T070007Z",
+  "selected_model": "linear_regression",
+  "selection_rationale": "linear_regression selected: lowest validation MAE (2.562824307112073 mm) vs hist_gradient_boosting (5.308932521281937 mm). Selection used the validation split only — the held-out test set was not consulted.",
+  "split": {
+    "method": "chronological_by_unique_global_date",
+    "description": "Unique valid dates sorted ascending and cut chronologically; all districts of a date belong to the same split; rows are assigned to a split by their date only.",
+    "ratio": {
+      "train": 0.6,
+      "validation": 0.2,
+      "test": 0.2
+    },
+    "alternate_ratio_applied": false,
+    "warning": null,
+    "boundaries": {
+      "train": {
+        "start": "2025-06-01",
+        "end": "2025-08-11",
+        "dates": 72
+      },
+      "validation": {
+        "start": "2025-08-12",
+        "end": "2025-09-04",
+        "dates": 24
+      },
+      "test": {
+        "start": "2025-09-05",
+        "end": "2025-09-28",
+        "dates": 24
+      }
+    },
+    "record_counts": {
+      "train": 302,
+      "validation": 113,
+      "test": 110,
+      "total_usable": 525
+    }
+  },
+  "record_counts": {
+    "train": 302,
+    "validation": 113,
+    "test": 110,
+    "total_usable": 525
+  },
+  "row_exclusions": {
+    "total_rows": 600,
+    "missing_forecast": 44,
+    "insufficient_history": 31,
+    "missing_target": 0,
+    "usable_rows": 525
+  },
+  "feature_schema": {
+    "version": "features-v1",
+    "numeric_features": [
+      "nwp_rain_mm",
+      "ensemble_mean_mm",
+      "ensemble_spread_mm",
+      "prior_temp_c",
+      "prior_wind_kmph",
+      "prior_rain_1d_mm",
+      "prior_rain_3d_total_mm",
+      "prior_rain_3d_mean_mm",
+      "prior_rain_7d_total_mm",
+      "prior_rain_7d_mean_mm",
+      "nwp_prior_ok_ratio",
+      "ensemble_prior_ok_ratio",
+      "month",
+      "lead_hours"
+    ],
+    "categorical_features": [
+      "district",
+      "season"
+    ],
+    "feature_columns": [
+      "nwp_rain_mm",
+      "ensemble_mean_mm",
+      "ensemble_spread_mm",
+      "prior_temp_c",
+      "prior_wind_kmph",
+      "prior_rain_1d_mm",
+      "prior_rain_3d_total_mm",
+      "prior_rain_3d_mean_mm",
+      "prior_rain_7d_total_mm",
+      "prior_rain_7d_mean_mm",
+      "nwp_prior_ok_ratio",
+      "ensemble_prior_ok_ratio",
+      "month",
+      "lead_hours",
+      "district",
+      "season"
+    ],
+    "target": "target_observed_rain_mm",
+    "feature_availability_values": [
+      "ok",
+      "missing_forecast",
+      "insufficient_history"
+    ],
+    "feature_docs": [
+      {
+        "feature": "nwp_rain_mm",
+        "type": "numeric",
+        "source": "historical_forecasts_synthetic.csv (nwp_model_a.forecast_rain_mm)",
+        "timing": "Raw forecast for date D, issued at D - lead_hours (forecast side)",
+        "leakage_safeguard": "Raw value only; never bias-corrected or blended; contains no observation"
+      },
+      {
+        "feature": "ensemble_mean_mm",
+        "type": "numeric",
+        "source": "historical_forecasts_synthetic.csv (ensemble_mean.forecast_rain_mm)",
+        "timing": "Raw forecast for date D, issued at D - lead_hours",
+        "leakage_safeguard": "Raw value only; no observation enters this column"
+      },
+      {
+        "feature": "ensemble_spread_mm",
+        "type": "numeric",
+        "source": "historical_forecasts_synthetic.csv (ensemble_spread_mm)",
+        "timing": "Published with the ensemble forecast for D",
+        "leakage_safeguard": "Forecast-side statistic; imputed with the train-split median when absent"
+      },
+      {
+        "feature": "prior_temp_c",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (observed_temp_c, lead 24 series)",
+        "timing": "Latest observation strictly before D",
+        "leakage_safeguard": "Window is `date < D`; the value on D itself is never read"
+      },
+      {
+        "feature": "prior_wind_kmph",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (observed_wind_kmph, lead 24 series)",
+        "timing": "Latest observation strictly before D",
+        "leakage_safeguard": "Window is `date < D`"
+      },
+      {
+        "feature": "prior_rain_1d_mm",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (observed_rain_mm, lead 24 series)",
+        "timing": "Observation on D-1 only",
+        "leakage_safeguard": "Lag-1 shift: uses dates strictly earlier than D"
+      },
+      {
+        "feature": "prior_rain_3d_total_mm",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (lead 24 series)",
+        "timing": "Sum over [D-3, D-1]",
+        "leakage_safeguard": "Rolling window ends at D-1"
+      },
+      {
+        "feature": "prior_rain_3d_mean_mm",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (lead 24 series)",
+        "timing": "Mean over [D-3, D-1]",
+        "leakage_safeguard": "Rolling window ends at D-1"
+      },
+      {
+        "feature": "prior_rain_7d_total_mm",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (lead 24 series)",
+        "timing": "Sum over [D-7, D-1]",
+        "leakage_safeguard": "Rolling window ends at D-1"
+      },
+      {
+        "feature": "prior_rain_7d_mean_mm",
+        "type": "numeric",
+        "source": "observations_synthetic.csv (lead 24 series)",
+        "timing": "Mean over [D-7, D-1]",
+        "leakage_safeguard": "Rolling window ends at D-1"
+      },
+      {
+        "feature": "nwp_prior_ok_ratio",
+        "type": "numeric",
+        "source": "historical_forecasts_synthetic.csv (status column, nwp_model_a)",
+        "timing": "Share of status=='ok' rows over [D-14, D-1]",
+        "leakage_safeguard": "Forecast-status only (no observations); window strictly before D"
+      },
+      {
+        "feature": "ensemble_prior_ok_ratio",
+        "type": "numeric",
+        "source": "historical_forecasts_synthetic.csv (status column, ensemble_mean)",
+        "timing": "Share of status=='ok' rows over [D-14, D-1]",
+        "leakage_safeguard": "Forecast-status only (no observations); window strictly before D"
+      },
+      {
+        "feature": "month",
+        "type": "numeric",
+        "source": "calendar derivation from valid_date",
+        "timing": "Known at issue time",
+        "leakage_safeguard": "Pure calendar feature"
+      },
+      {
+        "feature": "lead_hours",
+        "type": "numeric",
+        "source": "request parameter (6 / 24 / 72)",
+        "timing": "Known at issue time",
+        "leakage_safeguard": "Configuration value"
+      },
+      {
+        "feature": "district",
+        "type": "categorical",
+        "source": "districts.csv (district_id)",
+        "timing": "Known at issue time",
+        "leakage_safeguard": "One-hot encoded with train-fitted categories (handle_unknown='ignore')"
+      },
+      {
+        "feature": "season",
+        "type": "categorical",
+        "source": "calendar derivation from valid_date month",
+        "timing": "Known at issue time",
+        "leakage_safeguard": "Pure calendar feature (Monsoon/Post-monsoon/Winter/Pre-monsoon)"
+      }
+    ]
+  },
+  "candidates": {
+    "linear_regression": {
+      "role": "baseline",
+      "trained_on": "train",
+      "evaluated_on": "validation",
+      "validation_metrics": {
+        "sample_count": 113,
+        "mae_mm": 2.562824307112073,
+        "rmse_mm": 4.036559963954522,
+        "mean_bias_error_mm": -0.4837885820045295,
+        "median_absolute_error_mm": 1.638731094942405,
+        "max_absolute_error_mm": 17.505093835752064
+      }
+    },
+    "hist_gradient_boosting": {
+      "role": "non_linear_candidate",
+      "trained_on": "train",
+      "evaluated_on": "validation",
+      "validation_metrics": {
+        "sample_count": 113,
+        "mae_mm": 5.308932521281937,
+        "rmse_mm": 11.402296840535717,
+        "mean_bias_error_mm": 2.277255992667919,
+        "median_absolute_error_mm": 1.3897263045850485,
+        "max_absolute_error_mm": 51.90233655005318
+      }
+    }
+  },
+  "held_out_test_metrics": {
+    "sample_count": 110,
+    "mae_mm": 2.3691746339467485,
+    "rmse_mm": 3.316115564744208,
+    "mean_bias_error_mm": 1.912801346454758,
+    "median_absolute_error_mm": 1.8246306169018331,
+    "max_absolute_error_mm": 10.85893496145146
+  },
+  "test_references": {
+    "naive_train_mean": {
+      "description": "Predicts the train+validation mean rainfall for every test row.",
+      "sample_count": 110,
+      "mae_mm": 35.95195618838992,
+      "rmse_mm": 38.307623949527176,
+      "mean_bias_error_mm": 32.60799561883899,
+      "median_absolute_error_mm": 39.060722891566265,
+      "max_absolute_error_mm": 153.33927710843375
+    },
+    "raw_nwp": {
+      "description": "Uses the raw NWP forecast as-is (no ML, no correction).",
+      "sample_count": 110,
+      "mae_mm": 2.319090909090909,
+      "rmse_mm": 5.307927176317597,
+      "mean_bias_error_mm": 0.2718181818181818,
+      "median_absolute_error_mm": 1.25,
+      "max_absolute_error_mm": 47.599999999999994
+    },
+    "precomputed_ai_source": {
+      "description": "The precomputed ai_rain_mm CSV source this model replaces (the fallback source).",
+      "sample_count": 98,
+      "mae_mm": 1.3877551020408165,
+      "rmse_mm": 1.9926907252583412,
+      "mean_bias_error_mm": 0.6714285714285713,
+      "median_absolute_error_mm": 1.0,
+      "max_absolute_error_mm": 5.300000000000011
+    }
+  },
+  "honesty": {
+    "selection_metric": "validation_mae_only",
+    "test_set_evaluated_once": true,
+    "test_used_for_selection": false,
+    "ml_worse_than_baseline": true,
+    "worse_than_references": [
+      "raw_nwp",
+      "precomputed_ai_source"
+    ],
+    "summary_sentences": [
+      "Held-out test MAE 2.3691746339467485 mm is lower (better) than the naive_train_mean reference (35.95195618838992 mm).",
+      "Held-out test MAE 2.3691746339467485 mm is higher (worse) than the raw_nwp reference (2.319090909090909 mm).",
+      "Held-out test MAE 2.3691746339467485 mm is higher (worse) than the precomputed_ai_source reference (1.3877551020408165 mm)."
+    ]
+  },
+  "fallback": {
+    "active": false,
+    "label": "trained_local_correction_model",
+    "reason": null
+  },
+  "provenance": {
+    "training_data": "Synthetic Development Dataset (seed 42) loaded from stored CSVs — development/testing only, not operational weather data.",
+    "split_policy": "chronological_by_unique_global_date",
+    "selection_policy": "Final model selected by validation MAE only.",
+    "test_policy": "Held-out future test split evaluated exactly once after selection; never used for hyperparameter or model selection.",
+    "preprocessing_policy": "Imputer, scaler and one-hot encoder are fitted on training rows only (single sklearn Pipeline fitted inside the train step).",
+    "retraining_policy": "Trained once through POST /model/train; rolling-origin retraining is future scope (not in this MVP).",
+    "algorithm_version": "varsha-blend-2.0.0",
+    "config_version": "phase2-defaults-v1"
+  },
+  "warnings": [
+    "The selected model's held-out test MAE is worse than reference predictor(s): raw_nwp, precomputed_ai_source. The trained model does NOT improve on these baselines for this lead horizon; the fallback source remains the safer input."
+  ],
+  "limitations": [
+    "Synthetic Development Dataset — Development/Testing Only — Not Operational Weather Data — Not an Official Weather Warning.",
+    "Single synthetic development dataset and a single 120-day monsoon period (2025-06-01 to 2025-09-28) — one deterministic sample, no cross-validation or multi-season sampling.",
+    "No operational validation: these metrics are computed against a synthetic replay dataset and are not IMD/NCMRWF skill scores; they carry no official-warning meaning.",
+    "The artifact is trained once from a controlled chronological split via POST /model/train; rolling-origin ML retraining per backtest date is future scope, not part of this MVP.",
+    "Only two candidate algorithms are trained (LinearRegression as the baseline, HistGradientBoostingRegressor as the non-linear candidate); no hyperparameter search is performed.",
+    "MAE/RMSE on small samples are sensitive to a few extreme rainfall days; read the sample counts together with every metric."
+  ],
+  "artifacts": {
+    "pipeline_file": "varsha_ai_local_24h.joblib",
+    "report_file": "varsha_ai_local_24h_report.json",
+    "pipeline_path": "C:\\Users\\user\\Documents\\Default Project\\varsha-weather-ai\\data\\models\\varsha_ai_local_24h.joblib",
+    "report_path": "C:\\Users\\user\\Documents\\Default Project\\varsha-weather-ai\\data\\models\\varsha_ai_local_24h_report.json"
+  }
+}

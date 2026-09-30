@@ -1,0 +1,62 @@
+# =====================================================================
+# VARSHA Weather AI — root .gitignore
+# Keep .env.example files TRACKED; never commit real .env / secrets.
+# =====================================================================
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# --- Local databases (never commit SQLite files) ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Environment / secrets ---
+# .env* files are ignored EXCEPT .env.example which is intentionally tracked.
+.env
+.env.*
+!.env.example
+.envrc
+.flaskenv
+
+# --- Node / Next.js (Phase 5+) ---
+node_modules/
+.next/
+out/
+.vercel/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Generated backtest reports (regenerate with GET /backtest; keep folder) ---
+data/reports/*.csv
+data/reports/*.xlsx
+data/reports/*.json
+!data/reports/.gitkeep
+
+# --- Trained model artifacts (regenerate with POST /model/train; keep folder) ---
+# The JSON training reports are kept for review; the binary pipelines are not.
+# See docs/DEPLOYMENT.md for the cloud implication (deployed model starts in
+# fallback mode until you train on the instance, or mount a persistent disk).
+data/models/*.joblib
+!data/models/.gitkeep
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

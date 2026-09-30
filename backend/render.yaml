@@ -1,0 +1,35 @@
+# =====================================================================
+# VARSHA Weather AI — Render blueprint (free tier)
+#
+# Blueprint-style config; no secrets live here. The CORS origin below is a
+# PLACEHOLDER — replace it with your real Vercel URL after the frontend is
+# deployed (or set it in the Render dashboard and redeploy the service).
+#
+# NOTE: Render free-tier filesystems are ephemeral. SQLite audit rows,
+# backtest reports and retrained .joblib artifacts are lost on redeploy
+# unless you attach a persistent disk at data/ (or the paths set via
+# VARSHA_DB_URL / VARSHA_REPORTS_DIR / VARSHA_MODELS_DIR).
+# =====================================================================
+services:
+  - type: web
+    name: varsha-weather-ai-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: VARSHA_DATA_MODE
+        value: synthetic
+      # MUST be replaced with the deployed Vercel origin, e.g.
+      # https://varsha-weather-ai.vercel.app
+      - key: VARSHA_CORS_ORIGINS
+        value: https://your-vercel-domain.vercel.app
+      # Uncomment and adjust if you attach a persistent disk:
+      # - key: VARSHA_MODELS_DIR
+      #   value: /data/models
+      # - key: VARSHA_REPORTS_DIR
+      #   value: /data/reports
+      # - key: VARSHA_DB_URL
+      #   value: sqlite:////data/varsha_weather_ai.db
